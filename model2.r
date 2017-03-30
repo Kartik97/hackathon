@@ -1,0 +1,43 @@
+c<-read.csv("datafile.csv")
+library(dplyr)
+library(tseries)
+head(c)
+d=c
+c<-filter(c,SD_Name=="EAST UTTAR PRADESH")
+c<-filter(c,YEAR<=2001)
+c<-select(c,YEAR:DEC)
+#d<-filter(d,YEAR>2010)
+d<-filter(d,SD_Name=="EAST UTTAR PRADESH")
+d<-select(d,YEAR:DEC)
+d<-filter(d,YEAR<=2002)
+head(c)
+library(reshape)
+mel<-melt(c,c("YEAR"))
+meld<-melt(d,c("YEAR"))
+head(mel)
+mel<-arrange(mel,YEAR)
+meld<-arrange(meld,YEAR)
+head(mel)
+mel<-ts(mel$value,frequency=12)
+meld<-ts(meld$value,frequency=12)
+class(mel)
+#model<-arima(mel,order=c(1,0,1),seasonal=list(order=c(1,1,1),period=24))
+model<-Arima(mel,order=c(1,0,1),seasonal=list(order=c(1,1,1),period=12))
+
+# arima-x modeling
+
+
+
+model_Arimax<-Arima(mel,order=c(1,0,1),seasonal=list(order=c(1,1,1),period=12,xreg=east_temp_train))
+pre_Arimax = predict(model_Arimax, xreg=east_temp_test,n.ahead = 12)
+#model1<-auto.arima(mel)
+#summary(model)
+#tail(model)
+library(forecast)
+pre<-forecast(model,h=12)
+#plot(pre)
+plot(pre,xlim=c(52,54))
+lines(meld,col='red')
+#par(mfrow=c(1,1))
+#write.csv(pre,"predictedindia.csv")
+

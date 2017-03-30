@@ -152,3 +152,4 @@ plot(fpre,xlim=c(65,75))
 plot(fpre,xlim=c(60,75))
 fpre
 write.csv(fpre,"predicted.csv")
+
